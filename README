@@ -1,0 +1,3 @@
+- JAVA_HOME must be set
+- javac/java/etc. must be in PATH
+- env.sh must be sourced (from project root directory)
