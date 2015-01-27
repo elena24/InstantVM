@@ -1,2 +1,32 @@
-<project name="InstantVM" basedir=".">
+<project name="InstantVM" default="compile" basedir=".">
+
+	<presetdef name="javac">
+		<javac includeantruntime="false" />
+	</presetdef>
+
+	<property name="bin" location="bin"/>
+	<property name="lib" location="libs"/>
+	<property name="sources" location="src/main"/>
+	<path id="classpath">
+		<fileset dir="${lib}">
+			<include name="**/*.jar"/>
+			<exclude name="**/aws-java-sdk-flow-build-tools-1.9.16.jar"/>	<!-- get rid of irrelevant compilation warnings -->
+		</fileset>
+	</path>
+
+	<target name="init">
+		<mkdir dir="${bin}"/>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac
+			srcdir="${sources}"
+			destdir="${bin}"
+			classpathref="classpath"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="${bin}"/>
+	</target>
+
 </project>
