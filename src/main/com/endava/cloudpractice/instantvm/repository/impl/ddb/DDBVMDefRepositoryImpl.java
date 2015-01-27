@@ -1,5 +1,8 @@
 package com.endava.cloudpractice.instantvm.repository.impl.ddb;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.GetItemRequest;
+import com.amazonaws.services.dynamodbv2.model.GetItemResult;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.endava.cloudpractice.instantvm.repository.VMDefRepository;
 import com.endava.cloudpractice.instantvm.repository.datamodel.VMDefinition;
@@ -9,9 +12,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
 
 
 public class DDBVMDefRepositoryImpl implements VMDefRepository {
+
+	private static final String KEY = "Name";
+	private static final String VALUE = "Data";
 
 	private final String table;
 	private final ObjectMapper mapper = new ObjectMapper();
@@ -24,19 +31,38 @@ public class DDBVMDefRepositoryImpl implements VMDefRepository {
 	@Override
 	public void writeVMDefinition(VMDefinition def) {
 		Preconditions.checkArgument(def != null);
+
+		String json = null;
 		try {
-			String json = mapper.writeValueAsString(def);
-			AWSClients.DDB.putItem(new PutItemRequest().withTableName(table).withItem(
-				ImmutableMap.of()));
+			json = mapper.writeValueAsString(def);
 		} catch(JsonProcessingException e) {
 			Throwables.propagate(e);
 		}
+
+		AWSClients.DDB.putItem(new PutItemRequest().withTableName(table)
+			.withItem(ImmutableMap.of(
+				KEY, new AttributeValue().withS(def.getName()),
+				VALUE, new AttributeValue().withS(json))));
 	}
 
 	@Override
 	public VMDefinition readVMDefinition(String name) {
 		Preconditions.checkArgument(name != null && !name.isEmpty());
-		return null;
+
+		GetItemResult result = AWSClients.DDB.getItem(new GetItemRequest().withTableName(table)
+			.withKey(ImmutableMap.of(KEY, new AttributeValue().withS(name))));
+		String json = result.getItem().get(VALUE).getS();
+		if (json == null) {
+			return null;
+		}
+
+		VMDefinition def = null;
+		try {
+			def = mapper.readValue(json, VMDefinition.class);
+		} catch(IOException e) {
+			Throwables.propagate(e);
+		}
+		return def;
 	}
 
 }
