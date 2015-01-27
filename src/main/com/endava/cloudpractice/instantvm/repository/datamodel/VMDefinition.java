@@ -1,5 +1,6 @@
 package com.endava.cloudpractice.instantvm.repository.datamodel;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
@@ -57,7 +58,7 @@ public class VMDefinition {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this)
+		return MoreObjects.toStringHelper(this)
 			.addValue(name)
 			.addValue(description)
 			.toString();
