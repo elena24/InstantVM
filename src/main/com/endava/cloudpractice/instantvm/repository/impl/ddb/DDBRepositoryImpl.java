@@ -1,4 +1,4 @@
-package com.endava.cloudpractice.instantvm.repository.impl.dynamodb;
+package com.endava.cloudpractice.instantvm.repository.impl.ddb;
 
 import com.endava.cloudpractice.instantvm.repository.Repository;
 import com.endava.cloudpractice.instantvm.repository.datamodel.VMDefinition;
