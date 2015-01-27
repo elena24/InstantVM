@@ -1,28 +1,67 @@
-<project name="InstantVM" default="compile" basedir=".">
+<project name="InstantVM" default="build" basedir=".">
 
 	<presetdef name="javac">
 		<javac includeantruntime="false" />
 	</presetdef>
 
 	<property name="bin" location="bin"/>
+	<property name="src" location="src"/>
 	<property name="lib" location="libs"/>
-	<property name="sources" location="src/main"/>
-	<path id="classpath">
+	<property name="tools" location="tools"/>
+	<property name="bin.src" location="${bin}/main"/>
+	<property name="bin.tst" location="${bin}/test"/>
+	<property name="src.src" location="${src}/main"/>
+	<property name="src.tst" location="${src}/test"/>
+	<path id="classpath.src">
 		<fileset dir="${lib}">
 			<include name="**/*.jar"/>
 			<exclude name="**/aws-java-sdk-flow-build-tools-1.9.16.jar"/>	<!-- get rid of irrelevant compilation warnings -->
 		</fileset>
 	</path>
+	<path id="classpath.tst">
+		<path refid="classpath.src"/>
+		<fileset dir="${tools}">
+			<include name="junit-4.12/**/*.jar"/>
+		</fileset>
+		<pathelement location="${bin.src}"/>
+	</path>
+	<path id="classpath.junit">
+		<path refid="classpath.tst"/>
+		<pathelement location="${bin.tst}"/>
+	</path>
 
 	<target name="init">
-		<mkdir dir="${bin}"/>
+		<mkdir dir="${bin.src}"/>
+		<mkdir dir="${bin.tst}"/>
 	</target>
 
-	<target name="compile" depends="init">
+	<target name="build" depends="compile, test"/>
+	<target name="compile" depends="compile.src, compile.tst"/>
+
+	<target name="compile.src" depends="init">
 		<javac
-			srcdir="${sources}"
-			destdir="${bin}"
-			classpathref="classpath"/>
+			srcdir="${src.src}"
+			destdir="${bin.src}"
+			classpathref="classpath.src"/>
+	</target>
+
+	<target name="compile.tst" depends="compile.src">
+		<javac
+			srcdir="${src.tst}"
+			destdir="${bin.tst}"
+			classpathref="classpath.tst"/>
+	</target>
+
+	<target name="test" depends="compile.tst">
+		<junit haltonfailure="yes">
+			<formatter type="plain" usefile="false"/>
+			<classpath refid="classpath.junit"/>
+			<batchtest todir=".">
+				<fileset dir="${src.tst}">
+					<include name="**/*Test.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
 	</target>
 
 	<target name="clean">
