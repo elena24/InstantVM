@@ -1,3 +1,4 @@
-- JAVA_HOME must be set
+- JAVA_HOME environment variable must be set
+- AWS_ACCESS_KEY_ID and AWS_SECRET_KEY environment variables must be set
 - javac/java/etc. must be in PATH
 - env.sh must be sourced (from project root directory)
