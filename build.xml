@@ -4,18 +4,25 @@
 		<javac includeantruntime="false" />
 	</presetdef>
 
-	<property name="bin" location="bin"/>
+	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+	<property name="findbugs.home" value="tools/findbugs-3.0.0"/>
+
+	<property name="build" location="build"/>
+	<property name="build.bin" location="${build}/bin"/>
+	<property name="build.reports" location="${build}/reports"/>
+	<property name="build.bin.src" location="${build.bin}/classes/main"/>
+	<property name="build.bin.tst" location="${build.bin}/classes/test"/>
+	<property name="build.bin.src.jar" location="${build.bin}/jars/InsantVM.jar"/>
+	<property name="build.bin.tst.jar" location="${build.bin}/jars/InsantVMTests.jar"/>
 	<property name="src" location="src"/>
 	<property name="lib" location="libs"/>
 	<property name="tools" location="tools"/>
-	<property name="bin.src" location="${bin}/main"/>
-	<property name="bin.tst" location="${bin}/test"/>
 	<property name="src.src" location="${src}/main"/>
 	<property name="src.tst" location="${src}/test"/>
 	<path id="classpath.src">
 		<fileset dir="${lib}">
 			<include name="**/*.jar"/>
-			<exclude name="**/aws-java-sdk-flow-build-tools-1.9.16.jar"/>	<!-- get rid of irrelevant compilation warnings -->
+			<exclude name="**/aws-java-sdk-flow-build-tools-1.9.16.jar"/>	<!-- get rid of irrelevant compilation warnings on Java 8 -->
 		</fileset>
 	</path>
 	<path id="classpath.tst">
@@ -23,33 +30,37 @@
 		<fileset dir="${tools}">
 			<include name="junit-4.12/**/*.jar"/>
 		</fileset>
-		<pathelement location="${bin.src}"/>
+		<pathelement location="${build.bin.src.jar}"/>
 	</path>
 	<path id="classpath.junit">
 		<path refid="classpath.tst"/>
-		<pathelement location="${bin.tst}"/>
+		<pathelement location="${build.bin.tst.jar}"/>
 	</path>
 
 	<target name="init">
-		<mkdir dir="${bin.src}"/>
-		<mkdir dir="${bin.tst}"/>
+		<mkdir dir="${build.bin}"/>
+		<mkdir dir="${build.reports}"/>
+		<mkdir dir="${build.bin.src}"/>
+		<mkdir dir="${build.bin.tst}"/>
 	</target>
 
-	<target name="build" depends="compile, test"/>
+	<target name="build" depends="compile, analyze, test"/>
 	<target name="compile" depends="compile.src, compile.tst"/>
 
 	<target name="compile.src" depends="init">
 		<javac
 			srcdir="${src.src}"
-			destdir="${bin.src}"
+			destdir="${build.bin.src}"
 			classpathref="classpath.src"/>
+		<jar destfile="${build.bin.src.jar}" basedir="${build.bin.src}"/>
 	</target>
 
 	<target name="compile.tst" depends="compile.src">
 		<javac
 			srcdir="${src.tst}"
-			destdir="${bin.tst}"
+			destdir="${build.bin.tst}"
 			classpathref="classpath.tst"/>
+		<jar destfile="${build.bin.tst.jar}" basedir="${build.bin.tst}"/>
 	</target>
 
 	<target name="test" depends="compile.tst">
@@ -64,8 +75,18 @@
 		</junit>
 	</target>
 
+	<target name="analyze" depends="compile.src">
+		<findbugs home="${findbugs.home}"
+			output="html" outputFile="${build.reports}/findbugs.html"
+			failOnError="true">
+				<auxClasspath refid="classpath.src"/>
+				<sourcePath path="${src.src}"/>
+				<class location="${build.bin.src.jar}"/>
+		</findbugs>
+	</target>
+
 	<target name="clean">
-		<delete dir="${bin}"/>
+		<delete dir="${build}"/>
 	</target>
 
 </project>
