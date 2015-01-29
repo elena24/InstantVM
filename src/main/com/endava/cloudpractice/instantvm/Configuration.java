@@ -6,8 +6,8 @@ import java.util.Random;
 
 public class Configuration {
 
-	public static final String AWS_ACCESS_KEY_ID;//="AKIAJWIGIABNOMXZYF5Q";
-	public static final String AWS_SECRET_KEY;//="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";
+	public static final String AWS_ACCESS_KEY_ID;
+	public static final String AWS_SECRET_KEY;
 
 	public static final String AWS_DDB_ENDPOINT = "dynamodb.us-west-2.amazonaws.com";
 	public static final String AWS_EC2_ENDPOINT = "ec2.us-west-2.amazonaws.com";
