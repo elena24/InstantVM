@@ -8,8 +8,6 @@ import com.endava.cloudpractice.instantvm.Configuration;
 import com.endava.cloudpractice.instantvm.instances.VMManager;
 import com.endava.cloudpractice.instantvm.util.AWSClients;
 import com.google.common.base.Preconditions;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
