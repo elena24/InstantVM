@@ -78,11 +78,12 @@
 	<target name="analyze" depends="compile.src">
 		<findbugs home="${findbugs.home}"
 			output="html" outputFile="${build.reports}/findbugs.html"
-			failOnError="true">
+			failOnError="true" warningsProperty="findbugs.warnings">
 				<auxClasspath refid="classpath.src"/>
 				<sourcePath path="${src.src}"/>
 				<class location="${build.bin.src.jar}"/>
 		</findbugs>
+		<fail if="findbugs.warnings"/>
 	</target>
 
 	<target name="clean">
