@@ -29,7 +29,6 @@ public class VMEC2RepositoryImpl implements VMEC2Repository {
 	private static final String VM_IMAGE_ID_KEY = "vmImageId";
 	private static final String VM_INSTANCE_TYPE_KEY = "vmInstanceType";
 	private final CreateSecurityGroupRequest createSecurityGroupRequest = new CreateSecurityGroupRequest();
-	private CreateSecurityGroupResult createSecurityGroupResult;
 	private final IpPermission ipPermission = new IpPermission();
 	private final AuthorizeSecurityGroupIngressRequest authorizeSecurityGroupIngressRequest = new AuthorizeSecurityGroupIngressRequest();
 	private final CreateKeyPairRequest createKeyPairRequest = new CreateKeyPairRequest();
@@ -47,7 +46,7 @@ public class VMEC2RepositoryImpl implements VMEC2Repository {
 		createSecurityGroupRequest.withGroupName(
 				Configuration.SECURITY_GROUP_NAME).withDescription(
 				Configuration.SECURITY_GROUP_DESCRIPTION);
-		createSecurityGroupResult = AWSClients.EC2_CLIENT
+		AWSClients.EC2_CLIENT
 				.createSecurityGroup(createSecurityGroupRequest);
 
 		ipPermission.withIpRanges(Configuration.IP_RANGE_1)

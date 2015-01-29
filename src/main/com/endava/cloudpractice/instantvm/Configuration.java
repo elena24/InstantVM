@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class Configuration {
 
+	private static final Random RAND = new Random();
+
 	public static final String AWS_ACCESS_KEY_ID;
 	public static final String AWS_SECRET_KEY;
 
@@ -14,7 +16,7 @@ public class Configuration {
 	
 	public static final String AWS_ZONE = "us-west-2b";
 
-	public static final String SECURITY_GROUP_NAME = "securityGroup-"+(new Random()).nextInt();
+	public static final String SECURITY_GROUP_NAME = "securityGroup-" + RAND.nextInt();
 	public static final String SECURITY_GROUP_DESCRIPTION = "My group description";
 	
 	public static final String IP_RANGE_1 = "0.0.0.0/0";
@@ -22,7 +24,7 @@ public class Configuration {
 	public static final int PORT = 22;
 	public static final Integer MIN_NO_INSTANCES = 1;
 	public static final Integer MAX_NO_INSTANCES = 1;
-	public static String KEY_NAME = "ec2-"+(new Random()).nextInt();
+	public static final String KEY_NAME = "ec2-" + RAND.nextInt();
 	
 	static {
 		Map<String, String> env = System.getenv();
