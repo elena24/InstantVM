@@ -1,4 +1,4 @@
-package com.endava.cloudpractice.instantvm.repository.impl;
+package com.endava.cloudpractice.instantvm.repository.impl.ddb;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.GetItemRequest;

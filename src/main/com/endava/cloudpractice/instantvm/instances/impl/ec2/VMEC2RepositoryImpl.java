@@ -1,8 +1,4 @@
-package com.endava.cloudpractice.instantvm.repository.impl;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+package com.endava.cloudpractice.instantvm.instances.impl.ec2;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
@@ -19,26 +15,28 @@ import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.endava.cloudpractice.instantvm.Configuration;
-import com.endava.cloudpractice.instantvm.repository.VMDefRepository;
-import com.endava.cloudpractice.instantvm.repository.VMEC2Repository;
+import com.endava.cloudpractice.instantvm.instances.VMEC2Repository;
 import com.endava.cloudpractice.instantvm.util.AWSClients;
 import com.google.common.base.Preconditions;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 
 public class VMEC2RepositoryImpl implements VMEC2Repository {
 
 	private static final String VM_IMAGE_ID_KEY = "vmImageId";
 	private static final String VM_INSTANCE_TYPE_KEY = "vmInstanceType";
+
 	private final CreateSecurityGroupRequest createSecurityGroupRequest = new CreateSecurityGroupRequest();
 	private final IpPermission ipPermission = new IpPermission();
 	private final AuthorizeSecurityGroupIngressRequest authorizeSecurityGroupIngressRequest = new AuthorizeSecurityGroupIngressRequest();
 	private final CreateKeyPairRequest createKeyPairRequest = new CreateKeyPairRequest();
 	private CreateKeyPairResult createKeyPairResult;
 	private KeyPair keyPair = new KeyPair();
-	private VMDefRepository vmDefRepo;
 
-	public VMEC2RepositoryImpl(String table) {
-		Preconditions.checkArgument(table != null && !table.isEmpty());
-		vmDefRepo = new DDBVMDefRepositoryImpl(table);
+
+	public VMEC2RepositoryImpl() {
 	}
 
 	@Override
@@ -73,20 +71,18 @@ public class VMEC2RepositoryImpl implements VMEC2Repository {
 	}
 
 	@Override
-	public List<String> startEC2Instance() {
+	public List<String> startEC2Instance(String instanceType, String imageId) {
 
 		List<String> runninginstanceIDs = new ArrayList<String>();
 		RunInstancesRequest request = new RunInstancesRequest();
 
-		request.setInstanceType(vmDefRepo
-				.readVMDefinition(VM_INSTANCE_TYPE_KEY).getDescription());
+		request.setInstanceType(instanceType);
 		request.setMinCount(Configuration.MIN_NO_INSTANCES);
 		request.setMaxCount(Configuration.MAX_NO_INSTANCES);
 		Placement p = new Placement();
 		p.setAvailabilityZone(Configuration.AWS_ZONE);
 		request.setPlacement(p);
-		request.setImageId(vmDefRepo.readVMDefinition(VM_IMAGE_ID_KEY)
-				.getDescription());
+		request.setImageId(imageId);
 		request.setKeyName(keyPair.getKeyName());
 
 		RunInstancesResult runInstancesRes = AWSClients.EC2_CLIENT
@@ -111,4 +107,5 @@ public class VMEC2RepositoryImpl implements VMEC2Repository {
 		rq.getInstanceIds().add(instanceId);
 		AWSClients.EC2_CLIENT.terminateInstances(rq);
 	}
+
 }
