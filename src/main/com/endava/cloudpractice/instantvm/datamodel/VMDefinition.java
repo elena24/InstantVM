@@ -1,4 +1,4 @@
-package com.endava.cloudpractice.instantvm.repository.datamodel;
+package com.endava.cloudpractice.instantvm.datamodel;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;

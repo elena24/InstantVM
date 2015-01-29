@@ -1,6 +1,6 @@
 package com.endava.cloudpractice.instantvm.repository;
 
-import com.endava.cloudpractice.instantvm.repository.datamodel.VMDefinition;
+import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
 
 
 public interface VMDefRepository {

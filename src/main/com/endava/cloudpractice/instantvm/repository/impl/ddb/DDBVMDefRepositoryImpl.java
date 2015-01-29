@@ -5,7 +5,7 @@ import com.amazonaws.services.dynamodbv2.model.GetItemRequest;
 import com.amazonaws.services.dynamodbv2.model.GetItemResult;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.endava.cloudpractice.instantvm.repository.VMDefRepository;
-import com.endava.cloudpractice.instantvm.repository.datamodel.VMDefinition;
+import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
 import com.endava.cloudpractice.instantvm.util.AWSClients;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
