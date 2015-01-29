@@ -15,7 +15,7 @@ import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.endava.cloudpractice.instantvm.Configuration;
-import com.endava.cloudpractice.instantvm.instances.VMEC2Repository;
+import com.endava.cloudpractice.instantvm.instances.VMManager;
 import com.endava.cloudpractice.instantvm.util.AWSClients;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class VMEC2RepositoryImpl implements VMEC2Repository {
+public class EC2VMManagerImpl implements VMManager {
 
 	private static final String VM_IMAGE_ID_KEY = "vmImageId";
 	private static final String VM_INSTANCE_TYPE_KEY = "vmInstanceType";
@@ -35,9 +35,6 @@ public class VMEC2RepositoryImpl implements VMEC2Repository {
 	private CreateKeyPairResult createKeyPairResult;
 	private KeyPair keyPair = new KeyPair();
 
-
-	public VMEC2RepositoryImpl() {
-	}
 
 	@Override
 	public void createSecurityGroup() {

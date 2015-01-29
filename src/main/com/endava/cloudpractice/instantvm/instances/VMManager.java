@@ -4,7 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import java.util.List;
 
 
-public interface VMEC2Repository {
+public interface VMManager {
 	
 	void createSecurityGroup();
 	void createKeyPair();

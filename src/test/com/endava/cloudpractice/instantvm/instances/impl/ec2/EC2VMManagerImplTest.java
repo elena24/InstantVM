@@ -18,38 +18,38 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class VMEC2RepositoryImplTest {
+public class EC2VMManagerImplTest {
 
-	private static final Logger LOGGER = Logger.getLogger(VMEC2RepositoryImplTest.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(EC2VMManagerImplTest.class.getName());
 
 	private static String table;
-	private static VMEC2RepositoryImpl ec2Repository;
+	private static EC2VMManagerImpl vmManager;
 	private List<String> instanceIds;
 
 	@Before
 	public void before() {
-		ec2Repository = new VMEC2RepositoryImpl();
+		vmManager = new EC2VMManagerImpl();
 	}
 
 	@After
 	public void after() {
 		for (String id : instanceIds) {
 			try {
-				ec2Repository.terminateAMI(id);
+				vmManager.terminateAMI(id);
 			} catch (AmazonServiceException e) {
 				LOGGER.warning(e.getMessage());
 			} catch (Exception e) {
 				LOGGER.warning(e.getMessage());
 			}
 		}
-		ec2Repository = null;
+		vmManager = null;
 	}
 
 	@Test
 	public void startInstanceTest() throws AmazonServiceException, Exception {
-		ec2Repository.createSecurityGroup();
-		ec2Repository.createKeyPair();
-		instanceIds = ec2Repository.startEC2Instance("t2.micro", "ami-b5a7ea85");
+		vmManager.createSecurityGroup();
+		vmManager.createKeyPair();
+		instanceIds = vmManager.startEC2Instance("t2.micro", "ami-b5a7ea85");
 	}
 
 }
