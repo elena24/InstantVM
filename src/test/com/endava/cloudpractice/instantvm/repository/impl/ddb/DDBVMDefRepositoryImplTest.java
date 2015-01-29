@@ -61,10 +61,14 @@ public class DDBVMDefRepositoryImplTest {
 	public void roundtrip() {
 		VMDefinition def1, def2;
 
-		def1 = new VMDefinition().withName("vmdef").withDescription("descr");
+		def1 = new VMDefinition()
+			.withName("name")
+			.withDescription("description")
+			.withType("type")
+			.withImage("image");
 
 		repository.writeVMDefinition(def1);
-		def2 = repository.readVMDefinition("vmdef");
+		def2 = repository.readVMDefinition("name");
 
 		Assert.assertEquals(def1, def2);
 	}
