@@ -51,7 +51,8 @@
 		<javac
 			srcdir="${src.src}"
 			destdir="${build.bin.src}"
-			classpathref="classpath.src"/>
+			classpathref="classpath.src"
+			debug="on"/>
 		<jar destfile="${build.bin.src.jar}" basedir="${build.bin.src}"/>
 	</target>
 
@@ -59,7 +60,8 @@
 		<javac
 			srcdir="${src.tst}"
 			destdir="${build.bin.tst}"
-			classpathref="classpath.tst"/>
+			classpathref="classpath.tst"
+			debug="on"/>
 		<jar destfile="${build.bin.tst.jar}" basedir="${build.bin.tst}"/>
 	</target>
 

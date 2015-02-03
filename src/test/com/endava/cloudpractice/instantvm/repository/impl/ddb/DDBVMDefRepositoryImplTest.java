@@ -8,6 +8,7 @@ import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
 import com.endava.cloudpractice.instantvm.util.AWSClients;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.After;
@@ -22,6 +23,7 @@ public class DDBVMDefRepositoryImplTest {
 
 	private static String table;
 	private DDBVMDefRepositoryImpl repository;
+
 
 	@BeforeClass
 	public static void beforeClass() {
@@ -41,36 +43,88 @@ public class DDBVMDefRepositoryImplTest {
 		} while(!"ACTIVE".equals(result.getTable().getTableStatus()));
 	}
 
+
 	@AfterClass
 	public static void afterClass() {
 		AWSClients.DDB.deleteTable(table);
 		table = null;
 	}
 
+
 	@Before
 	public void before() {
 		repository = new DDBVMDefRepositoryImpl(table);
+		for(VMDefinition def : repository.listVMDefinitions()) {
+			repository.deleteVMDefinition(def.getName());
+		}
 	}
+
 
 	@After
 	public void after() {
 		repository = null;
 	}
 
+
 	@Test
 	public void roundtrip() {
+		String name = UUID.randomUUID().toString();
 		VMDefinition def1, def2;
 
 		def1 = new VMDefinition()
-			.withName("name")
+			.withName(name)
 			.withDescription("description")
 			.withType("type")
 			.withImage("image");
 
 		repository.writeVMDefinition(def1);
-		def2 = repository.readVMDefinition("name");
+		def2 = repository.readVMDefinition(name);
 
 		Assert.assertEquals(def1, def2);
+	}
+
+
+	@Test
+	public void delete() {
+		String name = UUID.randomUUID().toString();
+		VMDefinition def1, def2;
+
+		def1 = new VMDefinition()
+			.withName(name)
+			.withDescription("description")
+			.withType("type")
+			.withImage("image");
+
+		repository.writeVMDefinition(def1);
+		repository.deleteVMDefinition(name);
+		def2 = repository.readVMDefinition(name);
+
+		Assert.assertNull(def2);
+	}
+
+
+	@Test
+	public void scan() {
+		String name = UUID.randomUUID().toString();
+		VMDefinition def1 = new VMDefinition()
+			.withName(name)
+			.withDescription("description")
+			.withType("type")
+			.withImage("image");
+		repository.writeVMDefinition(def1);
+
+		List<VMDefinition> defs = repository.listVMDefinitions();
+
+		Assert.assertEquals(1, defs.size());
+		VMDefinition def2 = defs.iterator().next();
+		Assert.assertEquals(def1, def2);
+	}
+
+
+	@Test
+	public void scanEmpty() {
+		List<VMDefinition> defs = repository.listVMDefinitions();
+		Assert.assertTrue(defs.isEmpty());
 	}
 
 }
