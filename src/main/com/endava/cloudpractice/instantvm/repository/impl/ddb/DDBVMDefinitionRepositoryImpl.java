@@ -7,7 +7,7 @@ import com.amazonaws.services.dynamodbv2.model.GetItemResult;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
-import com.endava.cloudpractice.instantvm.repository.VMDefRepository;
+import com.endava.cloudpractice.instantvm.repository.VMDefinitionRepository;
 import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
 import com.endava.cloudpractice.instantvm.util.AWSClients;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class DDBVMDefRepositoryImpl implements VMDefRepository {
+public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 
 	private static final String KEY = "Name";
 	private static final String VALUE = "Data";
@@ -31,7 +31,7 @@ public class DDBVMDefRepositoryImpl implements VMDefRepository {
 	private final ObjectMapper mapper = new ObjectMapper();
 
 
-	public DDBVMDefRepositoryImpl(String table) {
+	public DDBVMDefinitionRepositoryImpl(String table) {
 		Preconditions.checkArgument(table != null && !table.isEmpty());
 		this.table = table;
 	}

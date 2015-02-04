@@ -19,10 +19,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-public class DDBVMDefRepositoryImplTest {
+public class DDBVMDefinitionRepositoryImplTest {
 
 	private static String table;
-	private DDBVMDefRepositoryImpl repository;
+	private DDBVMDefinitionRepositoryImpl repository;
 
 
 	@BeforeClass
@@ -53,9 +53,9 @@ public class DDBVMDefRepositoryImplTest {
 
 	@Before
 	public void before() {
-		repository = new DDBVMDefRepositoryImpl(table);
-		for(VMDefinition def : repository.listVMDefinitions()) {
-			repository.deleteVMDefinition(def.getName());
+		repository = new DDBVMDefinitionRepositoryImpl(table);
+		for(VMDefinition vmDefinition : repository.listVMDefinitions()) {
+			repository.deleteVMDefinition(vmDefinition.getName());
 		}
 	}
 

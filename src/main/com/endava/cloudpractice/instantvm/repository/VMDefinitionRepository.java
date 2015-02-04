@@ -4,7 +4,7 @@ import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
 import java.util.List;
 
 
-public interface VMDefRepository {
+public interface VMDefinitionRepository {
 
 	VMDefinition readVMDefinition(String name);
 	void writeVMDefinition(VMDefinition def);
