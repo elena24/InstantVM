@@ -15,7 +15,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 
-public class EC2VMManagerImplTest {
+public class EC2VMManagerImplIntegrationTest {
 
 	private static EC2VMManagerImpl vmManager;
 

@@ -45,6 +45,7 @@
 	</target>
 
 	<target name="build" depends="compile, analyze, test"/>
+	<target name="test" depends="test.unit, test.integration"/>
 	<target name="compile" depends="compile.src, compile.tst"/>
 
 	<target name="compile.src" depends="init">
@@ -65,13 +66,26 @@
 		<jar destfile="${build.bin.tst.jar}" basedir="${build.bin.tst}"/>
 	</target>
 
-	<target name="test" depends="compile.tst">
+	<target name="test.unit" depends="compile.tst">
 		<junit haltonfailure="yes">
 			<formatter type="plain" usefile="false"/>
 			<classpath refid="classpath.junit"/>
 			<batchtest todir=".">
 				<fileset dir="${src.tst}">
 					<include name="**/*Test.java"/>
+					<exclude name="**/*IntegrationTest.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="test.integration" depends="compile.tst">
+		<junit haltonfailure="yes">
+			<formatter type="plain" usefile="false"/>
+			<classpath refid="classpath.junit"/>
+			<batchtest todir=".">
+				<fileset dir="${src.tst}">
+					<include name="**/*IntegrationTest.java"/>
 				</fileset>
 			</batchtest>
 		</junit>

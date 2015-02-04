@@ -19,7 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-public class DDBVMDefinitionRepositoryImplTest {
+public class DDBVMDefinitionRepositoryImplIntegrationTest {
 
 	private static String table;
 	private DDBVMDefinitionRepositoryImpl repository;
