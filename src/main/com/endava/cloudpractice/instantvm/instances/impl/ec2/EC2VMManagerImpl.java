@@ -62,11 +62,11 @@ public class EC2VMManagerImpl implements VMManager {
 
 
 	@Override
-	public void terminateVM(String id) {
-		Preconditions.checkArgument(id != null && !id.isEmpty());
+	public void terminateVM(String vmId) {
+		Preconditions.checkArgument(vmId != null && !vmId.isEmpty());
 
 		AWSClients.EC2.terminateInstances(new TerminateInstancesRequest()
-			.withInstanceIds(id));
+			.withInstanceIds(vmId));
 	}
 
 

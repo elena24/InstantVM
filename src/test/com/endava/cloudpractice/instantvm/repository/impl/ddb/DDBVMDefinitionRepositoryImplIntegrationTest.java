@@ -55,7 +55,7 @@ public class DDBVMDefinitionRepositoryImplIntegrationTest {
 	public void before() {
 		repository = new DDBVMDefinitionRepositoryImpl(table);
 		for(VMDefinition vmDefinition : repository.listVMDefinitions()) {
-			repository.deleteVMDefinition(vmDefinition.getName());
+			repository.removeVMDefinition(vmDefinition.getName());
 		}
 	}
 
@@ -77,8 +77,8 @@ public class DDBVMDefinitionRepositoryImplIntegrationTest {
 			.withType("type")
 			.withImage("image");
 
-		repository.writeVMDefinition(def1);
-		def2 = repository.readVMDefinition(name);
+		repository.addVMDefinition(def1);
+		def2 = repository.getVMDefinition(name);
 
 		Assert.assertEquals(def1, def2);
 	}
@@ -95,9 +95,9 @@ public class DDBVMDefinitionRepositoryImplIntegrationTest {
 			.withType("type")
 			.withImage("image");
 
-		repository.writeVMDefinition(def1);
-		repository.deleteVMDefinition(name);
-		def2 = repository.readVMDefinition(name);
+		repository.addVMDefinition(def1);
+		repository.removeVMDefinition(name);
+		def2 = repository.getVMDefinition(name);
 
 		Assert.assertNull(def2);
 	}
@@ -111,7 +111,7 @@ public class DDBVMDefinitionRepositoryImplIntegrationTest {
 			.withDescription("description")
 			.withType("type")
 			.withImage("image");
-		repository.writeVMDefinition(def1);
+		repository.addVMDefinition(def1);
 
 		List<VMDefinition> defs = repository.listVMDefinitions();
 

@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface VMDefinitionRepository {
 
-	VMDefinition readVMDefinition(String name);
-	void writeVMDefinition(VMDefinition def);
-	void deleteVMDefinition(String name);
+	VMDefinition getVMDefinition(String vmDefinitionName);
+	void addVMDefinition(VMDefinition vmDefinition);
+	void removeVMDefinition(String vmDefinitionName);
 	List<VMDefinition> listVMDefinitions();
 
 }

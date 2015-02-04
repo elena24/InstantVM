@@ -38,30 +38,30 @@ public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 
 
 	@Override
-	public VMDefinition readVMDefinition(String name) {
-		Preconditions.checkArgument(name != null && !name.isEmpty());
+	public VMDefinition getVMDefinition(String vmDefinitionName) {
+		Preconditions.checkArgument(vmDefinitionName != null && !vmDefinitionName.isEmpty());
 
 		GetItemResult result = AWSClients.DDB.getItem(new GetItemRequest().withTableName(table)
-			.withKey(ImmutableMap.of(KEY, new AttributeValue().withS(name))));
+			.withKey(ImmutableMap.of(KEY, new AttributeValue().withS(vmDefinitionName))));
 		return getVMDefinitionFromDDBItem(result.getItem());
 	}
 
 
 	@Override
-	public void writeVMDefinition(VMDefinition def) {
-		Preconditions.checkArgument(def != null);
+	public void addVMDefinition(VMDefinition vmDefinition) {
+		Preconditions.checkArgument(vmDefinition != null);
 
 		AWSClients.DDB.putItem(new PutItemRequest().withTableName(table)
-			.withItem(getDDBItemFromVMDefinition(def)));
+			.withItem(getDDBItemFromVMDefinition(vmDefinition)));
 	}
 
 
 	@Override
-	public void deleteVMDefinition(String name) {
-		Preconditions.checkArgument(name != null && !name.isEmpty());
+	public void removeVMDefinition(String vmDefinitionName) {
+		Preconditions.checkArgument(vmDefinitionName != null && !vmDefinitionName.isEmpty());
 
 		AWSClients.DDB.deleteItem(new DeleteItemRequest().withTableName(table)
-			.withKey(ImmutableMap.of(KEY, new AttributeValue().withS(name))));
+			.withKey(ImmutableMap.of(KEY, new AttributeValue().withS(vmDefinitionName))));
 	}
 
 
