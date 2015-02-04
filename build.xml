@@ -29,6 +29,7 @@
 		<path refid="classpath.src"/>
 		<fileset dir="${tools}">
 			<include name="junit-4.12/**/*.jar"/>
+			<include name="mockito-2.0.3/**/*.jar"/>
 		</fileset>
 		<pathelement location="${build.bin.src.jar}"/>
 	</path>
