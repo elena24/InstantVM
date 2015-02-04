@@ -14,6 +14,8 @@ public class Configuration {
 	public static final String AWS_EC2_SECURITYGROUP_NAME = "CloudPractice.InstantVM.Default";
 	public static final String AWS_EC2_KEYPAIR_NAME = "CloudPractice.InstantVM.Default";
 
+	public static final String VMDEFNAME_ATTRIBUTE = "VMDefinition.Name";
+
 	static {
 		Map<String, String> env = System.getenv();
 		AWS_ACCESS_KEY_ID = env.get("AWS_ACCESS_KEY_ID");
