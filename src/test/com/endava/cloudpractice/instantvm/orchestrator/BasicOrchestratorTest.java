@@ -39,9 +39,11 @@ public class BasicOrchestratorTest {
 
 	@Test
 	public void addVMDefinition() {
-		VMDefinition def = new VMDefinition().withName("name");
-		orchestrator.addVMDefinition(def);
-		Mockito.verify(defRepository).addVMDefinition(def);
+		VMDefinition vmDefinition = new VMDefinition().withName("name");
+
+		orchestrator.addVMDefinition(vmDefinition);
+
+		Mockito.verify(defRepository).addVMDefinition(vmDefinition);
 	}
 
 
@@ -63,10 +65,10 @@ public class BasicOrchestratorTest {
 		Mockito.when(defRepository.listVMDefinitions()).thenReturn(ImmutableList.of(vmDefinition));
 
 		orchestrator.addVMDefinition(vmDefinition);
-		List<VMDefinition> defs = orchestrator.listVMDefinitions();
+		List<VMDefinition> vmDefinitions = orchestrator.listVMDefinitions();
 
-		Assert.assertEquals(1, defs.size());
-		Assert.assertEquals(vmDefinition, defs.iterator().next());
+		Assert.assertEquals(1, vmDefinitions.size());
+		Assert.assertEquals(vmDefinition, vmDefinitions.iterator().next());
 	}
 
 
@@ -93,6 +95,30 @@ public class BasicOrchestratorTest {
 
 		Mockito.verify(vmManager).launchVM(vmDefinition);
 		Assert.assertEquals(intendedVMStatus, actualVMStatus);
+	}
+
+
+	@Test
+	public void terminateVM() {
+		String vmId = "id";
+
+		orchestrator.terminateVM(vmId);
+	
+		Mockito.verify(vmManager).terminateVM(vmId);
+	}
+
+
+	@Test
+	public void listVMs() {
+		String vmId = "id";
+		VMStatus vmStatus = new VMStatus().withId(vmId);
+
+		Mockito.when(vmManager.listVMs()).thenReturn(ImmutableList.of(vmStatus));
+
+		List<VMStatus> vmStatuses = orchestrator.listVMs();
+
+		Assert.assertEquals(1, vmStatuses.size());
+		Assert.assertEquals(vmStatus, vmStatuses.iterator().next());
 	}
 
 }

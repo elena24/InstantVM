@@ -67,15 +67,13 @@ public class BasicOrchestrator implements Orchestrator {
 
 	@Override
 	public void terminateVM(String vmId) {
-		//TODO: Add implementation
-		throw new UnsupportedOperationException();
+		vmManager.terminateVM(vmId);
 	}
 
 
 	@Override
 	public List<VMStatus> listVMs() {
-		//TODO: Add implementation
-		throw new UnsupportedOperationException();
+		return vmManager.listVMs();
 	}
 
 }
