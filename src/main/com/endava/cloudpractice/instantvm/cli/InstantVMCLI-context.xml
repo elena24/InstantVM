@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   					   http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="defRepository" class="com.endava.cloudpractice.instantvm.repository.impl.ddb.DDBVMDefinitionRepositoryImpl">
+		<constructor-arg name="table" value="CloudPractice.InstantVM.VMDefinitionRepository"/>
+	</bean>
+
+	<bean id="vmManager" class="com.endava.cloudpractice.instantvm.instances.impl.ec2.EC2VMManagerImpl"/>
+
+	<bean id="orchestrator" class="com.endava.cloudpractice.instantvm.orchestrator.BasicOrchestrator">
+		<constructor-arg name="defRepository" ref="defRepository"/>
+		<constructor-arg name="vmManager" ref="vmManager"/>
+	</bean>
+
+</beans>

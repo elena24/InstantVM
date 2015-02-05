@@ -55,6 +55,10 @@
 			destdir="${build.bin.src}"
 			classpathref="classpath.src"
 			debug="on"/>
+		<copy todir="${build.bin.src}">
+			<fileset dir="${src.src}" includes="**/*.xml"/>
+			<fileset dir="${src.src}" includes="**/*.properties"/>
+		</copy>
 		<jar destfile="${build.bin.src.jar}" basedir="${build.bin.src}"/>
 	</target>
 
