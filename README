@@ -1,4 +1,16 @@
+Prerequisites
+-------------
 - JAVA_HOME environment variable must be set
 - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY environment variables must be set
 - javac/java/etc. must be in PATH
 - env.sh must be sourced (from project root directory)
+
+
+Command Line Interface
+----------------------
+- Make sure the project is built before trying to execute the CLI
+- Usage examples:
+	* Print the command usage
+	./cli.sh -help
+	* List the VM definitions
+	./cli.sh -listVMDefs
