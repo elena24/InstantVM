@@ -16,6 +16,7 @@ import org.apache.commons.cli.ParseException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.endava.cloudpractice.instantvm.datamodel.BuilderType;
 import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
 import com.endava.cloudpractice.instantvm.datamodel.VMStatus;
 import com.endava.cloudpractice.instantvm.orchestrator.Orchestrator;
@@ -94,8 +95,8 @@ public class InstantVMCLI {
 		VMDefinition vmDefinition = new VMDefinition();
 		vmDefinition.setName(params.get("name"));
 		vmDefinition.setDescription(params.get("description"));
-		vmDefinition.setType(params.get("type"));
-		vmDefinition.setImage(params.get("image"));
+		vmDefinition.setBuilder(BuilderType.fromString(params.get("builder")));
+		vmDefinition.setRecipe(params.get("recipe"));
 		orchestrator.addVMDefinition(vmDefinition);
 	}
 

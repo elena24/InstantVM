@@ -9,8 +9,8 @@ public class VMDefinition {
 
 	private String name;
 	private String description;
-	private String type;
-	private String image;
+	private BuilderType builder;
+	private String recipe;
 
 	
 	public void setName(String name) {
@@ -41,32 +41,32 @@ public class VMDefinition {
 		return description;
 	}
 
-	public void setType(String type) {
-		Preconditions.checkArgument(type != null && !type.isEmpty());
-		this.type = type;
+	public void setBuilder(BuilderType builder) {
+		Preconditions.checkArgument(builder != null);
+		this.builder = builder;
 	}
 
-	public VMDefinition withType(String type) {
-		setType(type);
+	public VMDefinition withBuilder(BuilderType builder) {
+		setBuilder(builder);
 		return this;
 	}
 
-	public String getType() {
-		return type;
+	public BuilderType getBuilder() {
+		return builder;
 	}
 
-	public void setImage(String image) {
-		Preconditions.checkArgument(image != null && !image.isEmpty());
-		this.image = image;
+	public void setRecipe(String recipe) {
+		Preconditions.checkArgument(recipe != null && !recipe.isEmpty());
+		this.recipe = recipe;
 	}
 
-	public VMDefinition withImage(String image) {
-		setImage(image);
+	public VMDefinition withRecipe(String recipe) {
+		setRecipe(recipe);
 		return this;
 	}
 
-	public String getImage() {
-		return image;
+	public String getRecipe() {
+		return recipe;
 	}
 
 	@Override
@@ -78,8 +78,8 @@ public class VMDefinition {
 		return
 			Objects.equal(this.name, other.name) &&
 			Objects.equal(this.description, other.description) &&
-			Objects.equal(this.type, other.type) &&
-			Objects.equal(this.image, other.image);
+			Objects.equal(this.builder, other.builder) &&
+			Objects.equal(this.recipe, other.recipe);
 	}
 
 	@Override
@@ -87,8 +87,8 @@ public class VMDefinition {
 		return Objects.hashCode(
 			name,
 			description,
-			type,
-			image);
+			builder,
+			recipe);
 	}
 
 	@Override
@@ -96,8 +96,8 @@ public class VMDefinition {
 		return MoreObjects.toStringHelper(this)
 			.addValue(name)
 			.addValue(description)
-			.addValue(type)
-			.addValue(image)
+			.addValue(builder)
+			.addValue(recipe)
 			.toString();
 	}
 

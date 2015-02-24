@@ -38,8 +38,7 @@ public class EC2VMManagerImplIntegrationTest {
 		VMDefinition vmDefinition = new VMDefinition()
 			.withName(vmDefinitionName)
 			.withDescription("description")
-			.withType("t2.micro")
-			.withImage("ami-b5a7ea85");
+			.withRecipe("{\"type\":\"t2.micro\",\"image\":\"ami-dfc39aef\"}");
 
 		VMStatus vmStatus = vmManager.launchVM(vmDefinition);
 		Assert.assertNotNull(vmStatus);
@@ -58,8 +57,7 @@ public class EC2VMManagerImplIntegrationTest {
 		VMDefinition vmDefinition = new VMDefinition()
 			.withName(vmDefinitionName)
 			.withDescription("description")
-			.withType("t2.micro")
-			.withImage("ami-b5a7ea85");
+			.withRecipe("{\"type\":\"t2.micro\",\"image\":\"ami-dfc39aef\"}");
 
 		VMStatus vmStatus = vmManager.launchVM(vmDefinition);
 		Assert.assertNotNull(vmStatus);

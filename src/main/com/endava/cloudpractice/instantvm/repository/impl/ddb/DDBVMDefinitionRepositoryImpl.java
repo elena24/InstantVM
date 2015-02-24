@@ -8,27 +8,26 @@ import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.endava.cloudpractice.instantvm.repository.VMDefinitionRepository;
+import com.endava.cloudpractice.instantvm.datamodel.BuilderType;
 import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
 import com.endava.cloudpractice.instantvm.util.AWSClients;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import java.io.IOException;
+
 import java.util.List;
 import java.util.Map;
 
 
 public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 
-	private static final String KEY = "Name";
-	private static final String VALUE = "Data";
+	private static final String NAME = "Name";
+	private static final String DESCRIPTION = "Description";
+	private static final String BUILDER = "Builder";
+	private static final String RECIPE = "Recipe";
 
 	private final String table;
-	private final ObjectMapper mapper = new ObjectMapper();
 
 
 	public DDBVMDefinitionRepositoryImpl(String table) {
@@ -42,7 +41,7 @@ public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 		Preconditions.checkArgument(vmDefinitionName != null && !vmDefinitionName.isEmpty());
 
 		GetItemResult result = AWSClients.DDB.getItem(new GetItemRequest().withTableName(table)
-			.withKey(ImmutableMap.of(KEY, new AttributeValue().withS(vmDefinitionName))));
+			.withKey(ImmutableMap.of(NAME, new AttributeValue().withS(vmDefinitionName))));
 		return getVMDefinitionFromDDBItem(result.getItem());
 	}
 
@@ -61,7 +60,7 @@ public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 		Preconditions.checkArgument(vmDefinitionName != null && !vmDefinitionName.isEmpty());
 
 		AWSClients.DDB.deleteItem(new DeleteItemRequest().withTableName(table)
-			.withKey(ImmutableMap.of(KEY, new AttributeValue().withS(vmDefinitionName))));
+			.withKey(ImmutableMap.of(NAME, new AttributeValue().withS(vmDefinitionName))));
 	}
 
 
@@ -91,16 +90,11 @@ public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 			return ImmutableMap.of();
 		}
 
-		String json = null;
-		try {
-			json = mapper.writeValueAsString(def);
-		} catch(JsonProcessingException e) {
-			Throwables.propagate(e);
-		}
-
 		return ImmutableMap.of(
-			KEY, new AttributeValue().withS(def.getName()),
-			VALUE, new AttributeValue().withS(json));
+			NAME, new AttributeValue().withS(def.getName()),
+			DESCRIPTION, new AttributeValue().withS(def.getDescription()),
+			BUILDER, new AttributeValue().withS(def.getBuilder().toString()),
+			RECIPE, new AttributeValue().withS(def.getRecipe()));
 	}
 
 
@@ -109,16 +103,18 @@ public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 			return null;
 		}
 
-		String json = item.get(VALUE).getS();
-		if (json == null) {
-			return null;
+		VMDefinition def = new VMDefinition();
+		if(item.get(NAME) != null) {
+			def.setName(item.get(NAME).getS());
 		}
-
-		VMDefinition def = null;
-		try {
-			def = mapper.readValue(json, VMDefinition.class);
-		} catch(IOException e) {
-			Throwables.propagate(e);
+		if(item.get(DESCRIPTION) != null) {
+			def.setDescription(item.get(DESCRIPTION).getS());
+		}
+		if(item.get(BUILDER) != null) {
+			def.setBuilder(BuilderType.fromString(item.get(BUILDER).getS()));
+		}
+		if(item.get(RECIPE) != null) {
+			def.setRecipe(item.get(RECIPE).getS());
 		}
 		return def;
 	}

@@ -1,5 +1,6 @@
 package com.endava.cloudpractice.instantvm.instances.impl.ec2;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +19,10 @@ import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
 import com.endava.cloudpractice.instantvm.datamodel.VMStatus;
 import com.endava.cloudpractice.instantvm.instances.VMManager;
 import com.endava.cloudpractice.instantvm.util.AWSClients;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -32,16 +35,20 @@ public class EC2VMManagerImpl implements VMManager {
 	private static final String TAG_KEY_FILTER_NAME = "tag-key";
 
 
+	private final ObjectMapper mapper = new ObjectMapper();
+
+
 	@Override
 	public VMStatus launchVM(VMDefinition vmDefinition) {
 		Preconditions.checkArgument(vmDefinition != null);
-		Preconditions.checkArgument(vmDefinition.getType() != null);
-		Preconditions.checkArgument(vmDefinition.getImage() != null);
+		Preconditions.checkArgument(vmDefinition.getRecipe() != null);
+
+		Recipe recipe = deserializeRecipe(vmDefinition.getRecipe());
 
 		RunInstancesRequest request = new RunInstancesRequest()
-			.withInstanceType(vmDefinition.getType())
+			.withInstanceType(recipe.getType())
 			.withMinCount(1).withMaxCount(1)
-			.withImageId(vmDefinition.getImage())
+			.withImageId(recipe.getImage())
 			.withKeyName(Configuration.AWS_EC2_KEYPAIR_NAME)
 			.withSecurityGroups(Configuration.AWS_EC2_SECURITYGROUP_NAME);
 		RunInstancesResult response = AWSClients.EC2.runInstances(request);
@@ -111,6 +118,20 @@ public class EC2VMManagerImpl implements VMManager {
 		vmStatus.setAttributes(attributes);
 
 		return vmStatus;
+	}
+
+
+	private Recipe deserializeRecipe(String json) {
+		if(json == null) {
+			return null;
+		}
+		Recipe recipe = null;
+		try {
+			recipe = mapper.readValue(json, Recipe.class);
+		} catch (IOException e) {
+			Throwables.propagate(e);
+		}
+		return recipe;
 	}
 
 }
