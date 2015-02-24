@@ -1,0 +1,46 @@
+{
+	"AWSTemplateFormatVersion" : "2010-09-09",
+	"Description" : "Docker-enabled VM creation template.",
+	"Resources" : {
+		"VM" : {
+			"Type" : "AWS::EC2::Instance",
+			"Metadata" : {
+				"AWS::CloudFormation::Init" : {
+					"config" : {
+						"packages" : {
+							"yum" : {
+								"docker" : []
+							}
+						},
+						"services" : {
+							"sysvinit" : {
+								"docker" : { "enabled" : "true", "ensureRunning" : "true" }
+							}
+						}
+					}
+				}
+			},
+			"Properties" : {
+				"InstanceType" : "t2.micro",
+				"SecurityGroups" : [ "CloudPractice.InstantVM.Default" ],
+				"KeyName" : "CloudPractice.InstantVM.Default",
+				"ImageId" : "ami-dfc39aef",
+				"Tags" : [ { "Key" : "VMDefinition.Name", "Value" : "Docker"} ],
+				"UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
+					"#!/bin/bash -xe\n",
+					"yum update -y aws-cfn-bootstrap\n",
+					"/opt/aws/bin/cfn-init -v ",
+					"    --resource VM ",
+					"    --stack ", { "Ref" : "AWS::StackName" },
+					"    --region ", { "Ref" : "AWS::Region" }, "\n",
+					"gpasswd -a ec2-user docker\n"
+				]]}}
+			}
+		}
+	},
+	"Outputs" : {
+		"InstanceId" : {
+			"Value" : { "Ref" : "VM" }
+		}
+	}
+}

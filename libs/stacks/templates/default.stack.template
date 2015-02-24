@@ -1,0 +1,21 @@
+{
+	"AWSTemplateFormatVersion" : "2010-09-09",
+	"Description" : "Default VM creation template.",
+	"Resources" : {
+		"VM" : {
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : {
+				"InstanceType" : "t2.micro",
+				"SecurityGroups" : [ "CloudPractice.InstantVM.Default" ],
+				"KeyName" : "CloudPractice.InstantVM.Default",
+				"ImageId" : "ami-dfc39aef",
+				"Tags" : [ { "Key" : "VMDefinition.Name", "Value" : "Default"} ]
+			}
+		}
+	},
+	"Outputs" : {
+		"InstanceId" : {
+			"Value" : { "Ref" : "VM" }
+		}
+	}
+}
