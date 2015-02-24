@@ -74,7 +74,8 @@ public class InstantVMCLI {
 
 
 	private void launchVM(CommandLine line) {
-		orchestrator.launchVM(line.getOptionValue(OPT_LAUNCHVM));
+		VMStatus vmStatus = orchestrator.launchVM(line.getOptionValue(OPT_LAUNCHVM));
+		System.out.println(vmStatus);
 	}
 
 
