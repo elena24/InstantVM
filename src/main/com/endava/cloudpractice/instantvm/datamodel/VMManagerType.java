@@ -3,16 +3,16 @@ package com.endava.cloudpractice.instantvm.datamodel;
 import com.google.common.base.Preconditions;
 
 
-public enum BuilderType {
+public enum VMManagerType {
 
 	BARE_EC2("BareEC2"),
 	CLOUDFORMATION("CloudFormation"),
-	UNDEFINED("Undefined");
+	UNDEFINED("Unknown");
 
 
 	private final String text;
 
-	private BuilderType(String text) {
+	private VMManagerType(String text) {
 		Preconditions.checkArgument(text != null && !text.isEmpty());
 		this.text = text;
 	}
@@ -22,11 +22,11 @@ public enum BuilderType {
 		return text;
 	}
 
-	public static BuilderType fromString(String text) {
+	public static VMManagerType fromString(String text) {
 		Preconditions.checkArgument(text != null && !text.isEmpty());
-		for(BuilderType builderType : values()) {
-			if(text.equalsIgnoreCase(builderType.text)) {
-				return builderType;
+		for(VMManagerType vMManagerType : values()) {
+			if(text.equalsIgnoreCase(vMManagerType.text)) {
+				return vMManagerType;
 			}
 		}
 		throw new IllegalArgumentException(text);

@@ -9,7 +9,7 @@ public class VMDefinition {
 
 	private String name;
 	private String description;
-	private BuilderType builder;
+	private VMManagerType manager;
 	private String recipe;
 
 	
@@ -41,18 +41,18 @@ public class VMDefinition {
 		return description;
 	}
 
-	public void setBuilder(BuilderType builder) {
+	public void setManager(VMManagerType builder) {
 		Preconditions.checkArgument(builder != null);
-		this.builder = builder;
+		this.manager = builder;
 	}
 
-	public VMDefinition withBuilder(BuilderType builder) {
-		setBuilder(builder);
+	public VMDefinition withManager(VMManagerType manager) {
+		setManager(manager);
 		return this;
 	}
 
-	public BuilderType getBuilder() {
-		return builder;
+	public VMManagerType getManager() {
+		return manager;
 	}
 
 	public void setRecipe(String recipe) {
@@ -78,7 +78,7 @@ public class VMDefinition {
 		return
 			Objects.equal(this.name, other.name) &&
 			Objects.equal(this.description, other.description) &&
-			Objects.equal(this.builder, other.builder) &&
+			Objects.equal(this.manager, other.manager) &&
 			Objects.equal(this.recipe, other.recipe);
 	}
 
@@ -87,7 +87,7 @@ public class VMDefinition {
 		return Objects.hashCode(
 			name,
 			description,
-			builder,
+			manager,
 			recipe);
 	}
 
@@ -96,7 +96,7 @@ public class VMDefinition {
 		return MoreObjects.toStringHelper(this)
 			.addValue(name)
 			.addValue(description)
-			.addValue(builder)
+			.addValue(manager)
 			.addValue(recipe)
 			.toString();
 	}

@@ -8,7 +8,7 @@ import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.endava.cloudpractice.instantvm.repository.VMDefinitionRepository;
-import com.endava.cloudpractice.instantvm.datamodel.BuilderType;
+import com.endava.cloudpractice.instantvm.datamodel.VMManagerType;
 import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
 import com.endava.cloudpractice.instantvm.util.AWSClients;
 import com.google.common.base.Function;
@@ -24,7 +24,7 @@ public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 
 	private static final String NAME = "Name";
 	private static final String DESCRIPTION = "Description";
-	private static final String BUILDER = "Builder";
+	private static final String MANAGER = "Manager";
 	private static final String RECIPE = "Recipe";
 
 	private final String table;
@@ -37,30 +37,30 @@ public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 
 
 	@Override
-	public VMDefinition getVMDefinition(String vmDefinitionName) {
-		Preconditions.checkArgument(vmDefinitionName != null && !vmDefinitionName.isEmpty());
+	public VMDefinition getVMDefinition(String defName) {
+		Preconditions.checkArgument(defName != null && !defName.isEmpty());
 
 		GetItemResult result = AWSClients.DDB.getItem(new GetItemRequest().withTableName(table)
-			.withKey(ImmutableMap.of(NAME, new AttributeValue().withS(vmDefinitionName))));
+			.withKey(ImmutableMap.of(NAME, new AttributeValue().withS(defName))));
 		return getVMDefinitionFromDDBItem(result.getItem());
 	}
 
 
 	@Override
-	public void addVMDefinition(VMDefinition vmDefinition) {
-		Preconditions.checkArgument(vmDefinition != null);
+	public void addVMDefinition(VMDefinition def) {
+		Preconditions.checkArgument(def != null);
 
 		AWSClients.DDB.putItem(new PutItemRequest().withTableName(table)
-			.withItem(getDDBItemFromVMDefinition(vmDefinition)));
+			.withItem(getDDBItemFromVMDefinition(def)));
 	}
 
 
 	@Override
-	public void removeVMDefinition(String vmDefinitionName) {
-		Preconditions.checkArgument(vmDefinitionName != null && !vmDefinitionName.isEmpty());
+	public void removeVMDefinition(String defName) {
+		Preconditions.checkArgument(defName != null && !defName.isEmpty());
 
 		AWSClients.DDB.deleteItem(new DeleteItemRequest().withTableName(table)
-			.withKey(ImmutableMap.of(NAME, new AttributeValue().withS(vmDefinitionName))));
+			.withKey(ImmutableMap.of(NAME, new AttributeValue().withS(defName))));
 	}
 
 
@@ -93,7 +93,7 @@ public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 		return ImmutableMap.of(
 			NAME, new AttributeValue().withS(def.getName()),
 			DESCRIPTION, new AttributeValue().withS(def.getDescription()),
-			BUILDER, new AttributeValue().withS(def.getBuilder().toString()),
+			MANAGER, new AttributeValue().withS(def.getManager().toString()),
 			RECIPE, new AttributeValue().withS(def.getRecipe()));
 	}
 
@@ -110,8 +110,8 @@ public class DDBVMDefinitionRepositoryImpl implements VMDefinitionRepository {
 		if(item.get(DESCRIPTION) != null) {
 			def.setDescription(item.get(DESCRIPTION).getS());
 		}
-		if(item.get(BUILDER) != null) {
-			def.setBuilder(BuilderType.fromString(item.get(BUILDER).getS()));
+		if(item.get(MANAGER) != null) {
+			def.setManager(VMManagerType.fromString(item.get(MANAGER).getS()));
 		}
 		if(item.get(RECIPE) != null) {
 			def.setRecipe(item.get(RECIPE).getS());
