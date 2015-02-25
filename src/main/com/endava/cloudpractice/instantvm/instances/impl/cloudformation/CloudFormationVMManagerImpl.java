@@ -6,6 +6,7 @@ import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
 import com.endava.cloudpractice.instantvm.datamodel.VMStatus;
 import com.endava.cloudpractice.instantvm.instances.VMManager;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 
 
 public class CloudFormationVMManagerImpl implements VMManager {
@@ -15,7 +16,8 @@ public class CloudFormationVMManagerImpl implements VMManager {
 		Preconditions.checkArgument(def != null);
 		Preconditions.checkArgument(def.getRecipe() != null);
 
-		throw new UnsupportedOperationException("Not yet implemented.");
+		//TODO: Add implementation
+		return null;
 	}
 
 
@@ -23,13 +25,14 @@ public class CloudFormationVMManagerImpl implements VMManager {
 	public void terminateVM(String id) {
 		Preconditions.checkArgument(id != null && !id.isEmpty());
 
-		throw new UnsupportedOperationException("Not yet implemented.");
+		//TODO: Add implementation
 	}
 
 
 	@Override
 	public List<VMStatus> listVMs() {
-		throw new UnsupportedOperationException("Not yet implemented.");
+		//TODO: Add implementation
+		return ImmutableList.of();
 	}
 
 }

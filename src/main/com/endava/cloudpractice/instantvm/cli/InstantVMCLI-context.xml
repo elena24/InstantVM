@@ -4,15 +4,24 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	   					   http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="defRepository" class="com.endava.cloudpractice.instantvm.repository.impl.ddb.DDBVMDefinitionRepositoryImpl">
+	<bean id="Repo" class="com.endava.cloudpractice.instantvm.repository.impl.ddb.DDBVMDefinitionRepositoryImpl">
 		<constructor-arg name="table" value="CloudPractice.InstantVM.VMDefinitionRepository"/>
 	</bean>
 
-	<bean id="vmManager" class="com.endava.cloudpractice.instantvm.instances.impl.ec2.EC2VMManagerImpl"/>
+	<bean id="BareEC2" class="com.endava.cloudpractice.instantvm.instances.impl.ec2.EC2VMManagerImpl"/>
+	<bean id="CloudFormation" class="com.endava.cloudpractice.instantvm.instances.impl.cloudformation.CloudFormationVMManagerImpl"/>
+	<bean id="Managers" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="BARE_EC2" value-ref="BareEC2"/>
+				<entry key="CLOUDFORMATION" value-ref="CloudFormation"/>
+			</map>
+		</property>
+	</bean>
 
 	<bean id="orchestrator" class="com.endava.cloudpractice.instantvm.orchestrator.BasicOrchestrator">
-		<constructor-arg name="defRepository" ref="defRepository"/>
-		<constructor-arg name="vmManager" ref="vmManager"/>
+		<constructor-arg name="repo" ref="Repo"/>
+		<constructor-arg name="managers" ref="Managers"/>
 	</bean>
 
 </beans>
