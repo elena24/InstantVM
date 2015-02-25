@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.endava.cloudpractice.instantvm.Configuration;
 import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
+import com.endava.cloudpractice.instantvm.datamodel.VMManagerType;
 import com.endava.cloudpractice.instantvm.datamodel.VMStatus;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -34,43 +35,46 @@ public class EC2VMManagerImplIntegrationTest {
 
 	@Test
 	public void cycle() {
-		String vmDefinitionName = UUID.randomUUID().toString();
-		VMDefinition vmDefinition = new VMDefinition()
-			.withName(vmDefinitionName)
+		String defName = UUID.randomUUID().toString();
+		VMDefinition def = new VMDefinition()
+			.withName(defName)
 			.withDescription("description")
+			.withManager(VMManagerType.BARE_EC2)
 			.withRecipe("{\"type\":\"t2.micro\",\"image\":\"ami-dfc39aef\"}");
 
-		VMStatus vmStatus = vmManager.launchVM(vmDefinition);
-		Assert.assertNotNull(vmStatus);
+		VMStatus status = vmManager.launchVM(def);
+		Assert.assertNotNull(status);
 
-		vmManager.terminateVM(vmStatus.getId());
+		vmManager.terminateVM(status.getId());
 
-		Assert.assertNotNull(vmStatus.getId());
-		Assert.assertNotNull(vmStatus.getAttributes());
-		Assert.assertEquals(vmDefinitionName, vmStatus.getAttributes().get(Configuration.VMDEFNAME_ATTRIBUTE));
+		Assert.assertNotNull(status.getId());
+		Assert.assertNotNull(status.getAttributes());
+		Assert.assertEquals(defName, status.getAttributes().get(Configuration.VMDEFNAME_ATTRIBUTE));
+		Assert.assertEquals(def.getManager().toString(), status.getAttributes().get(Configuration.VMMANAGERTYPE_ATTRIBUTE));
 	}
 
 
 	@Test
 	public void list() {
-		String vmDefinitionName = UUID.randomUUID().toString();
-		VMDefinition vmDefinition = new VMDefinition()
-			.withName(vmDefinitionName)
+		String defName = UUID.randomUUID().toString();
+		VMDefinition def = new VMDefinition()
+			.withName(defName)
+			.withManager(VMManagerType.BARE_EC2)
 			.withDescription("description")
 			.withRecipe("{\"type\":\"t2.micro\",\"image\":\"ami-dfc39aef\"}");
 
-		VMStatus vmStatus = vmManager.launchVM(vmDefinition);
-		Assert.assertNotNull(vmStatus);
+		VMStatus status = vmManager.launchVM(def);
+		Assert.assertNotNull(status);
 		
-		List<VMStatus> vmStatuses = vmManager.listVMs();
+		List<VMStatus> statuses = vmManager.listVMs();
 
-		vmManager.terminateVM(vmStatus.getId());
+		vmManager.terminateVM(status.getId());
 
-		Assert.assertTrue(vmStatuses.size() >= 1);
-		Assert.assertNotNull(Iterables.find(vmStatuses, new Predicate<VMStatus>() {
+		Assert.assertTrue(statuses.size() >= 1);
+		Assert.assertNotNull(Iterables.find(statuses, new Predicate<VMStatus>() {
 			@Override
-			public boolean apply(VMStatus vmStatus) {
-				return vmDefinitionName.equals(vmStatus.getAttributes().get(Configuration.VMDEFNAME_ATTRIBUTE));
+			public boolean apply(VMStatus status) {
+				return defName.equals(status.getAttributes().get(Configuration.VMDEFNAME_ATTRIBUTE));
 			}}, null));
 	}
 
