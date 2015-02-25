@@ -8,8 +8,8 @@ import com.endava.cloudpractice.instantvm.datamodel.VMStatus;
 
 public interface VMManager {
 	
-	VMStatus launchVM(VMDefinition vmDefinition);
-	void terminateVM(String vmId);
+	VMStatus launchVM(VMDefinition def);
+	void terminateVM(String id);
 	List<VMStatus> listVMs();
 
 }

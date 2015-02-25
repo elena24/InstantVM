@@ -10,6 +10,7 @@ public class Configuration {
 
 	public static final String AWS_DDB_ENDPOINT = "dynamodb.us-west-2.amazonaws.com";
 	public static final String AWS_EC2_ENDPOINT = "ec2.us-west-2.amazonaws.com";
+	public static final String AWS_CLOUDFORMATION_ENDPOINT = "cloudformation.us-west-2.amazonaws.com";
 
 	public static final String AWS_EC2_SECURITYGROUP_NAME = "CloudPractice.InstantVM.Default";
 	public static final String AWS_EC2_KEYPAIR_NAME = "CloudPractice.InstantVM.Default";

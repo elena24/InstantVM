@@ -39,11 +39,11 @@ public class EC2VMManagerImpl implements VMManager {
 
 
 	@Override
-	public VMStatus launchVM(VMDefinition vmDefinition) {
-		Preconditions.checkArgument(vmDefinition != null);
-		Preconditions.checkArgument(vmDefinition.getRecipe() != null);
+	public VMStatus launchVM(VMDefinition def) {
+		Preconditions.checkArgument(def != null);
+		Preconditions.checkArgument(def.getRecipe() != null);
 
-		Recipe recipe = deserializeRecipe(vmDefinition.getRecipe());
+		Recipe recipe = deserializeRecipe(def.getRecipe());
 
 		RunInstancesRequest request = new RunInstancesRequest()
 			.withInstanceType(recipe.getType())
@@ -60,20 +60,20 @@ public class EC2VMManagerImpl implements VMManager {
 
 		AWSClients.EC2.createTags(new CreateTagsRequest(
 				ImmutableList.of(id),
-				ImmutableList.of(new Tag(Configuration.VMDEFNAME_ATTRIBUTE, vmDefinition.getName()))));
+				ImmutableList.of(new Tag(Configuration.VMDEFNAME_ATTRIBUTE, def.getName()))));
 
 		return new VMStatus()
 			.withId(id)
-			.withAttributes(ImmutableMap.of(Configuration.VMDEFNAME_ATTRIBUTE, vmDefinition.getName()));
+			.withAttributes(ImmutableMap.of(Configuration.VMDEFNAME_ATTRIBUTE, def.getName()));
 	}
 
 
 	@Override
-	public void terminateVM(String vmId) {
-		Preconditions.checkArgument(vmId != null && !vmId.isEmpty());
+	public void terminateVM(String id) {
+		Preconditions.checkArgument(id != null && !id.isEmpty());
 
 		AWSClients.EC2.terminateInstances(new TerminateInstancesRequest()
-			.withInstanceIds(vmId));
+			.withInstanceIds(id));
 	}
 
 
@@ -108,16 +108,16 @@ public class EC2VMManagerImpl implements VMManager {
 			return null;
 		}
 
-		VMStatus vmStatus = new VMStatus();
+		VMStatus status = new VMStatus();
 
-		vmStatus.setId(instance.getInstanceId());
+		status.setId(instance.getInstanceId());
 		Map<String, String> attributes = Maps.newHashMap();
 		for(Tag tag : instance.getTags()) {
 			attributes.put(tag.getKey(), tag.getValue());
 		}
-		vmStatus.setAttributes(attributes);
+		status.setAttributes(attributes);
 
-		return vmStatus;
+		return status;
 	}
 
 
