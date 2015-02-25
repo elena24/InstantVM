@@ -9,7 +9,8 @@
 				"SecurityGroups" : [ "CloudPractice.InstantVM.Default" ],
 				"KeyName" : "CloudPractice.InstantVM.Default",
 				"ImageId" : "ami-dfc39aef",
-				"Tags" : [ { "Key" : "VMDefinition.Name", "Value" : "Default"} ]
+				"Tags" : [ { "Key" : "VMDefinition.Name", "Value" : "Default"},
+						   { "Key" : "VMManager.Type", "Value" : "CloudFormation"} ]
 			}
 		}
 	},

@@ -60,11 +60,15 @@ public class EC2VMManagerImpl implements VMManager {
 
 		AWSClients.EC2.createTags(new CreateTagsRequest(
 				ImmutableList.of(id),
-				ImmutableList.of(new Tag(Configuration.VMDEFNAME_ATTRIBUTE, def.getName()))));
+				ImmutableList.of(
+						new Tag(Configuration.VMDEFNAME_ATTRIBUTE, def.getName()),
+						new Tag(Configuration.VMMANAGERTYPE_ATTRIBUTE, def.getManager().toString()))));
 
 		return new VMStatus()
 			.withId(id)
-			.withAttributes(ImmutableMap.of(Configuration.VMDEFNAME_ATTRIBUTE, def.getName()));
+			.withAttributes(ImmutableMap.of(
+					Configuration.VMDEFNAME_ATTRIBUTE, def.getName(),
+					Configuration.VMMANAGERTYPE_ATTRIBUTE, def.getManager().toString()));
 	}
 
 

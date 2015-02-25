@@ -16,6 +16,7 @@ public class Configuration {
 	public static final String AWS_EC2_KEYPAIR_NAME = "CloudPractice.InstantVM.Default";
 
 	public static final String VMDEFNAME_ATTRIBUTE = "VMDefinition.Name";
+	public static final String VMMANAGERTYPE_ATTRIBUTE = "VMManager.Type";
 
 	static {
 		Map<String, String> env = System.getenv();
