@@ -16,6 +16,7 @@ import com.amazonaws.services.ec2.model.Tag;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.endava.cloudpractice.instantvm.Configuration;
 import com.endava.cloudpractice.instantvm.datamodel.VMDefinition;
+import com.endava.cloudpractice.instantvm.datamodel.VMManagerType;
 import com.endava.cloudpractice.instantvm.datamodel.VMStatus;
 import com.endava.cloudpractice.instantvm.instances.VMManager;
 import com.endava.cloudpractice.instantvm.util.AWSClients;
@@ -33,6 +34,7 @@ import com.google.common.collect.Maps;
 public class EC2VMManagerImpl implements VMManager {
 
 	private static final String TAG_KEY_FILTER_NAME = "tag-key";
+	private static final String TAG_VALUE_FILTER_NAME = "tag-value";
 
 
 	private final ObjectMapper mapper = new ObjectMapper();
@@ -62,13 +64,13 @@ public class EC2VMManagerImpl implements VMManager {
 				ImmutableList.of(id),
 				ImmutableList.of(
 						new Tag(Configuration.VMDEFNAME_ATTRIBUTE, def.getName()),
-						new Tag(Configuration.VMMANAGERTYPE_ATTRIBUTE, def.getManager().toString()))));
+						new Tag(Configuration.VMMANAGERTYPE_ATTRIBUTE, VMManagerType.BARE_EC2.toString()))));
 
 		return new VMStatus()
 			.withId(id)
 			.withAttributes(ImmutableMap.of(
 					Configuration.VMDEFNAME_ATTRIBUTE, def.getName(),
-					Configuration.VMMANAGERTYPE_ATTRIBUTE, def.getManager().toString()));
+					Configuration.VMMANAGERTYPE_ATTRIBUTE, VMManagerType.BARE_EC2.toString()));
 	}
 
 
@@ -87,7 +89,9 @@ public class EC2VMManagerImpl implements VMManager {
 		String nextToken = null;
 		do {
 			DescribeInstancesResult result = AWSClients.EC2.describeInstances(new DescribeInstancesRequest()
-				.withFilters(new Filter().withName(TAG_KEY_FILTER_NAME).withValues(Configuration.VMDEFNAME_ATTRIBUTE))
+				.withFilters(
+						new Filter().withName(TAG_KEY_FILTER_NAME).withValues(Configuration.VMMANAGERTYPE_ATTRIBUTE),
+						new Filter().withName(TAG_VALUE_FILTER_NAME).withValues(VMManagerType.BARE_EC2.toString()))
 				.withNextToken(nextToken));
 			stats.addAll(ImmutableList.copyOf(Iterables.transform(
 					Iterables.concat(
