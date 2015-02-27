@@ -31,8 +31,7 @@ public class CloudFormationVMManagerImpl implements VMManager {
 
 	private static final String ID_PREFIX = "cfm-";
 
-
-	private final ObjectMapper mapper = new ObjectMapper();
+	private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
 
 	@Override
@@ -89,7 +88,21 @@ public class CloudFormationVMManagerImpl implements VMManager {
 	}
 
 
-	private VMStatus getVMStatusFromCloudFormationStack(Stack stack) {
+	private static Recipe deserializeRecipe(String json) {
+		if(json == null) {
+			return null;
+		}
+		Recipe recipe = null;
+		try {
+			recipe = JSON_MAPPER.readValue(json, Recipe.class);
+		} catch (IOException e) {
+			Throwables.propagate(e);
+		}
+		return recipe;
+	}
+
+
+	private static VMStatus getVMStatusFromCloudFormationStack(Stack stack) {
 		if(stack == null) {
 			return null;
 		}
@@ -104,20 +117,6 @@ public class CloudFormationVMManagerImpl implements VMManager {
 		status.setAttributes(attributes);
 
 		return status;
-	}
-
-
-	private Recipe deserializeRecipe(String json) {
-		if(json == null) {
-			return null;
-		}
-		Recipe recipe = null;
-		try {
-			recipe = mapper.readValue(json, Recipe.class);
-		} catch (IOException e) {
-			Throwables.propagate(e);
-		}
-		return recipe;
 	}
 
 }

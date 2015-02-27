@@ -37,8 +37,7 @@ public class EC2VMManagerImpl implements VMManager {
 	private static final String TAG_KEY_FILTER_NAME = "tag-key";
 	private static final String TAG_VALUE_FILTER_NAME = "tag-value";
 
-
-	private final ObjectMapper mapper = new ObjectMapper();
+	private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
 
 	@Override
@@ -68,7 +67,7 @@ public class EC2VMManagerImpl implements VMManager {
 						new Tag(Configuration.VMMANAGERTYPE_ATTRIBUTE, VMManagerType.BARE_EC2.toString()))));
 
 		return new VMStatus()
-			.withId(id.replaceAll("i-", ID_PREFIX))
+			.withId(getCustomIDFromEC2ID(id))
 			.withAttributes(ImmutableMap.of(
 					Configuration.VMDEFNAME_ATTRIBUTE, def.getName(),
 					Configuration.VMMANAGERTYPE_ATTRIBUTE, VMManagerType.BARE_EC2.toString()));
@@ -83,7 +82,7 @@ public class EC2VMManagerImpl implements VMManager {
 			return;
 		}
 		AWSClients.EC2.terminateInstances(new TerminateInstancesRequest()
-			.withInstanceIds(id.replaceAll(ID_PREFIX, "i-")));
+			.withInstanceIds(getEC2IDFromCustomID(id)));
 	}
 
 
@@ -115,14 +114,28 @@ public class EC2VMManagerImpl implements VMManager {
 	}
 
 
-	private VMStatus getVMStatusFromEC2Instance(Instance instance) {
+	private static Recipe deserializeRecipe(String json) {
+		if(json == null) {
+			return null;
+		}
+		Recipe recipe = null;
+		try {
+			recipe = JSON_MAPPER.readValue(json, Recipe.class);
+		} catch (IOException e) {
+			Throwables.propagate(e);
+		}
+		return recipe;
+	}
+
+
+	private static VMStatus getVMStatusFromEC2Instance(Instance instance) {
 		if(instance == null) {
 			return null;
 		}
 
 		VMStatus status = new VMStatus();
 
-		status.setId(instance.getInstanceId().replaceAll("i-", ID_PREFIX));
+		status.setId(getCustomIDFromEC2ID(instance.getInstanceId()));
 		Map<String, String> attributes = Maps.newHashMap();
 		for(Tag tag : instance.getTags()) {
 			attributes.put(tag.getKey(), tag.getValue());
@@ -133,17 +146,19 @@ public class EC2VMManagerImpl implements VMManager {
 	}
 
 
-	private Recipe deserializeRecipe(String json) {
-		if(json == null) {
+	private static String getCustomIDFromEC2ID(String id) {
+		if(id == null) {
 			return null;
 		}
-		Recipe recipe = null;
-		try {
-			recipe = mapper.readValue(json, Recipe.class);
-		} catch (IOException e) {
-			Throwables.propagate(e);
+		return id.replaceAll("i-", ID_PREFIX);
+	}
+
+
+	private static String getEC2IDFromCustomID(String id) {
+		if(id == null) {
+			return null;
 		}
-		return recipe;
+		return id.replaceAll(ID_PREFIX, "i-");
 	}
 
 }
