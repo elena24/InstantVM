@@ -18,18 +18,18 @@ import com.google.common.collect.Iterables;
 
 public class EC2VMManagerImplIntegrationTest {
 
-	private static EC2VMManagerImpl vmManager;
+	private static EC2VMManagerImpl manager;
 
 
 	@Before
 	public void before() {
-		vmManager = new EC2VMManagerImpl();
+		manager = new EC2VMManagerImpl();
 	}
 
 
 	@After
 	public void after() {
-		vmManager = null;
+		manager = null;
 	}
 
 
@@ -42,10 +42,10 @@ public class EC2VMManagerImplIntegrationTest {
 			.withManager(VMManagerType.BARE_EC2)
 			.withRecipe("{\"type\":\"t2.micro\",\"image\":\"ami-dfc39aef\"}");
 
-		VMStatus status = vmManager.launchVM(def);
+		VMStatus status = manager.launchVM(def);
 		Assert.assertNotNull(status);
 
-		vmManager.terminateVM(status.getId());
+		manager.terminateVM(status.getId());
 
 		Assert.assertNotNull(status.getId());
 		Assert.assertNotNull(status.getAttributes());
@@ -63,12 +63,12 @@ public class EC2VMManagerImplIntegrationTest {
 			.withDescription("description")
 			.withRecipe("{\"type\":\"t2.micro\",\"image\":\"ami-dfc39aef\"}");
 
-		VMStatus status = vmManager.launchVM(def);
+		VMStatus status = manager.launchVM(def);
 		Assert.assertNotNull(status);
 		
-		List<VMStatus> statuses = vmManager.listVMs();
+		List<VMStatus> statuses = manager.listVMs();
 
-		vmManager.terminateVM(status.getId());
+		manager.terminateVM(status.getId());
 
 		Assert.assertTrue(statuses.size() >= 1);
 		Assert.assertNotNull(Iterables.find(statuses, new Predicate<VMStatus>() {

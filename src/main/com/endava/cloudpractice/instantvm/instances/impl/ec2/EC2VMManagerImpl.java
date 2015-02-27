@@ -33,6 +33,7 @@ import com.google.common.collect.Maps;
 
 public class EC2VMManagerImpl implements VMManager {
 
+	private static final String ID_PREFIX = "ec2-";
 	private static final String TAG_KEY_FILTER_NAME = "tag-key";
 	private static final String TAG_VALUE_FILTER_NAME = "tag-value";
 
@@ -67,7 +68,7 @@ public class EC2VMManagerImpl implements VMManager {
 						new Tag(Configuration.VMMANAGERTYPE_ATTRIBUTE, VMManagerType.BARE_EC2.toString()))));
 
 		return new VMStatus()
-			.withId(id)
+			.withId(id.replaceAll("i-", ID_PREFIX))
 			.withAttributes(ImmutableMap.of(
 					Configuration.VMDEFNAME_ATTRIBUTE, def.getName(),
 					Configuration.VMMANAGERTYPE_ATTRIBUTE, VMManagerType.BARE_EC2.toString()));
@@ -78,8 +79,11 @@ public class EC2VMManagerImpl implements VMManager {
 	public void terminateVM(String id) {
 		Preconditions.checkArgument(id != null && !id.isEmpty());
 
+		if(!id.startsWith(ID_PREFIX)) {
+			return;
+		}
 		AWSClients.EC2.terminateInstances(new TerminateInstancesRequest()
-			.withInstanceIds(id));
+			.withInstanceIds(id.replaceAll(ID_PREFIX, "i-")));
 	}
 
 
@@ -118,7 +122,7 @@ public class EC2VMManagerImpl implements VMManager {
 
 		VMStatus status = new VMStatus();
 
-		status.setId(instance.getInstanceId());
+		status.setId(instance.getInstanceId().replaceAll("i-", ID_PREFIX));
 		Map<String, String> attributes = Maps.newHashMap();
 		for(Tag tag : instance.getTags()) {
 			attributes.put(tag.getKey(), tag.getValue());
