@@ -193,7 +193,7 @@ public class InstantVMCLI {
 	
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
-				"/com/endava/cloudpractice/instantvm/cli/InstantVMCLI-context.xml");
+                "/com/endava/cloudpractice/instantvm/cli/InstantVMCLI-context.xml");
 		Orchestrator orchestrator = (Orchestrator) applicationContext.getBean("orchestrator");
 		new InstantVMCLI(orchestrator).run(args);
 	}

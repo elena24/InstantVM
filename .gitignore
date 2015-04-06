@@ -3,3 +3,6 @@ build
 .settings
 .externalToolBuilders
 .classpath
+.idea
+target
+libOrig
