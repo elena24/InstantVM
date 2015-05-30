@@ -66,28 +66,6 @@
 
     <build>
         <plugins>
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-jar-plugin</artifactId>-->
-                <!--<version>2.6</version>-->
-                <!--<configuration>-->
-                    <!--<archive>-->
-                        <!--<index>true</index>-->
-                        <!--<manifest>-->
-                            <!--&lt;!&ndash;<addClasspath>true</addClasspath>&ndash;&gt;-->
-                            <!--<mainClass>com.endava.cloudpractice.instantvm.cli.InstantVMCLI</mainClass>-->
-                        <!--</manifest>-->
-                        <!--&lt;!&ndash;<manifestEntries>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<mode>development</mode>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<url>${project.url}</url>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<key>value</key>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</manifestEntries>&ndash;&gt;-->
-                    <!--</archive>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-
-
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
