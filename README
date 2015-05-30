@@ -8,8 +8,11 @@ Prerequisites
 
 Command Line Interface
 ----------------------
-- Make sure the project is built before trying to execute the CLI
+- Make sure the project is built before trying to execute the CLI:
+	mvn clean install
+
 - Usage examples:
+
 	* Print the command usage
 	./cli.sh -help
 	* List the VM definitions
