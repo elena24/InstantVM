@@ -56,7 +56,7 @@ public class EC2VMManagerImplIntegrationTest {
 
 	@Test
 	public void list() {
-		String defName = UUID.randomUUID().toString();
+		final String defName = UUID.randomUUID().toString();
 		VMDefinition def = new VMDefinition()
 			.withName(defName)
 			.withManager(VMManagerType.BARE_EC2)
@@ -65,7 +65,7 @@ public class EC2VMManagerImplIntegrationTest {
 
 		VMStatus status = manager.launchVM(def);
 		Assert.assertNotNull(status);
-		
+
 		List<VMStatus> statuses = manager.listVMs();
 
 		manager.terminateVM(status.getId());

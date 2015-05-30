@@ -4,5 +4,6 @@ build
 .externalToolBuilders
 .classpath
 .idea
+*.iml
 target
 libOrig

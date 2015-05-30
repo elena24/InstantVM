@@ -56,7 +56,7 @@ public class CloudFormationVMManagerImplIntegrationTest {
 
 	@Test
 	public void list() {
-		String defName = UUID.randomUUID().toString();
+		final String defName = UUID.randomUUID().toString();
 		VMDefinition def = new VMDefinition()
 			.withName(defName)
 			.withManager(VMManagerType.CLOUDFORMATION)

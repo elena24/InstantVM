@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -cp "lib/*;build/bin/jars/InsantVM.jar" com.endava.cloudpractice.instantvm.cli.InstantVMCLI "$@"
+java -jar target/InstantVM-1.0-SNAPSHOT-jar-with-dependencies.jar "$@"
